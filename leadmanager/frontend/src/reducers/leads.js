@@ -19,7 +19,7 @@ export default function(state = initialstate, action){
             return {
                 ...state,
                 leads:[...state.leads , action.payload]
-            }   
+            }  
         default:
             return state;
     }
