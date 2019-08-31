@@ -1,44 +1,41 @@
-import React, { Component, Fragment } from 'react'
-import PropTypes from 'prop-types'
-import { withAlert } from 'react-alert'
+import React, { Component, Fragment } from "react";
+import { withAlert } from "react-alert";
 import { connect } from "react-redux";
+import PropTypes from "prop-types";
 
 export class Alerts extends Component {
-    static propTypes = {
-        error: PropTypes.object.isRequired,
-        messages: PropTypes.object.isRequired
+  static propTypes = {
+    error: PropTypes.object.isRequired,
+    message: PropTypes.object.isRequired
+  };
+  componentDidUpdate(prevProps) {
+    const { error, alert, message } = this.props;
+    console.log(JSON.stringify(error)+' vs '+JSON.stringify(prevProps.error))
+    if (error !== prevProps.error) {
+        if (error.msg.detail) alert.error(`detail: ${error.msg.detail}`);
+      if (error.msg.name) alert.error(`Name: ${error.msg.name.join()}`);
+      if (error.msg.email) alert.error(`Email: ${error.msg.email.join()}`);
+      if (error.msg.message)
+        alert.error(`Message: ${error.msg.message.join()}`);
+      if (error.msg.non_field_errors)
+        alert.error(error.msg.non_field_errors.join());
+      if (error.msg.username) alert.error(error.msg.username.join());
     }
-    componentDidUpdate(prevState) {
-        const { error, alert, messages } = this.props
-        if (error !== prevState.error) {
-            if (error.msg.name){
-                alert.error(`name: ${error.msg.name.join()}`);
-            }
-            if (error.msg.email){
-                alert.error(`email: ${error.msg.email.join()}`);
-            }           
-        }
-        if (messages !== prevState.messages) {
-            if(messages.delete_lead){
-                alert.success(messages.delete_lead)
-            }
-            if(messages.add_lead){
-                alert.success(messages.add_lead)
-            }
-        }
+
+    if (message !== prevProps.message) {
+      if (message.deleteLead) alert.success(message.deleteLead);
+      if (message.addLead) alert.success(message.addLead);
+    //   if (message.passwordNotMatch) alert.error(message.passwordNotMatch);
     }
+  }
     render() {
-        return (
-            <Fragment />
-        )
+        return <Fragment />;
+      }
     }
-}
-
-const mapStateToProps = (state) => {
-    return ({
-        error: state.errors,
-        messages: state.messages
-    })
-}
-
-export default connect(mapStateToProps)(withAlert()(Alerts))
+    
+    const mapStateToProps = state => ({
+      error: state.errors,
+      message: state.messages
+    });
+    
+    export default connect(mapStateToProps)(withAlert()(Alerts));
